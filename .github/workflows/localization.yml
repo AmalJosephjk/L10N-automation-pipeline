@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  run-script:
+  localization:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,10 +22,40 @@ jobs:
       - name: Run Extraction Script
         run: python scripts/extract_strings.py
 
-      - name: Commit Output
+      - name: Validate JSON
+        run: python -m json.tool locales/en.json > /dev/null
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install Lokalise CLI
+        run: npm install -g @lokalise/cli
+
+      # 🚀 Upload source to Lokalise
+      - name: Upload to Lokalise
         run: |
-          git config --global user.name "bot"
+          lokalise2 file upload \
+            --token ${{ secrets.LOKALISE_API_TOKEN }} \
+            --project-id ${{ secrets.LOKALISE_PROJECT_ID }} \
+            --file locales/en.json \
+            --lang-iso en \
+            --replace-modified
+
+      # 📥 Download translations
+      - name: Download from Lokalise
+        run: |
+          lokalise2 file download \
+            --token ${{ secrets.LOKALISE_API_TOKEN }} \
+            --project-id ${{ secrets.LOKALISE_PROJECT_ID }} \
+            --format json \
+            --unzip-to ./locales
+
+      - name: Commit Translations
+        run: |
+          git config --global user.name "localization-bot"
           git config --global user.email "bot@email.com"
           git add locales/
-          git commit -m "Auto update translations" || echo "No changes"
+          git commit -m "Update translations from Lokalise" || echo "No changes"
           git push
