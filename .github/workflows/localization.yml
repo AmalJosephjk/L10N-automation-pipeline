@@ -34,21 +34,27 @@ jobs:
         run: npm install -g @lokalise/lokalise2-cli
 
       - name: Upload to Lokalise
+        env:
+          LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
+          LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
         run: |
           lokalise2 file upload \
-            --token ${{ secrets.LOKALISE_API_TOKEN }} \
-            --project-id ${{ secrets.LOKALISE_PROJECT_ID }} \
-            --file locales/en.json \
+            --token "$LOKALISE_API_TOKEN" \
+            --project-id "$LOKALISE_PROJECT_ID" \
+            --file "locales/en.json" \
             --lang-iso en \
             --replace-modified
 
       - name: Download from Lokalise
+        env:
+          LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
+          LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
         run: |
           lokalise2 file download \
-            --token ${{ secrets.LOKALISE_API_TOKEN }} \
-            --project-id ${{ secrets.LOKALISE_PROJECT_ID }} \
+            --token "$LOKALISE_API_TOKEN" \
+            --project-id "$LOKALISE_PROJECT_ID" \
             --format json \
-            --unzip-to ./locales
+            --unzip-to "./locales"
 
       - name: Commit Translations
         run: |
