@@ -31,7 +31,7 @@ jobs:
           node-version: "18"
 
       - name: Install Lokalise CLI
-        run: npm install -g @lokalise/cli
+      run: npm install -g @lokalise/lokalise2-cli
 
       # 🚀 Upload source to Lokalise
       - name: Upload to Lokalise
