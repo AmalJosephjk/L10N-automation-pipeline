@@ -32,9 +32,9 @@ jobs:
 
       - name: Install Lokalise CLI
         run: |
-        curl -L https://github.com/lokalise/lokalise-cli-2-go/releases/latest/download/lokalise2-linux-amd64 -o lokalise2
-        chmod +x lokalise2
-        sudo mv lokalise2 /usr/local/bin/
+          curl -L https://github.com/lokalise/lokalise-cli-2-go/releases/latest/download/lokalise2-linux-amd64 -o lokalise2
+          chmod +x lokalise2
+          sudo mv lokalise2 /usr/local/bin/
 
       - name: Upload to Lokalise
         env:
