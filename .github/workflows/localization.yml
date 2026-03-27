@@ -1,0 +1,28 @@
+name: Localization Pipeline
+
+on:
+  push:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Run Extraction Script
+        run: python scripts/extract_strings.py
+
+      - name: Commit Output
+        run: |
+          git config --global user.name "bot"
+          git config --global user.email "bot@email.com"
+          git add locales/
+          git commit -m "Auto update translations" || echo "No changes"
+          git push
