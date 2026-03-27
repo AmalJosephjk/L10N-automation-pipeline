@@ -25,17 +25,12 @@ jobs:
       - name: Validate JSON
         run: python -m json.tool locales/en.json > /dev/null
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-
       - name: Install Lokalise CLI
-      run: |
-        curl -L https://github.com/lokalise/lokalise-cli-2-go/releases/latest/download/lokalise2-linux-amd64.tar.gz -o lokalise2.tar.gz
-        tar -xzf lokalise2.tar.gz
-        chmod +x lokalise2
-        sudo mv lokalise2 /usr/local/bin/
+        run: |
+          curl -L https://github.com/lokalise/lokalise-cli-2-go/releases/latest/download/lokalise2-linux-amd64.tar.gz -o lokalise2.tar.gz
+          tar -xzf lokalise2.tar.gz
+          chmod +x lokalise2
+          sudo mv lokalise2 /usr/local/bin/
 
       - name: Upload to Lokalise
         env:
@@ -65,5 +60,5 @@ jobs:
           git config --global user.name "localization-bot"
           git config --global user.email "bot@email.com"
           git add locales/
-          git commit -m "Update translations from Lokalise" || echo "No changes"
+          git commit -m "Update translations" || echo "No changes"
           git push
