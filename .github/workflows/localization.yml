@@ -58,30 +58,19 @@ jobs:
         chmod +x lokalise2
         sudo mv lokalise2 /usr/local/bin/
 
-      - name: Upload to Lokalise
+            - name: Upload to Lokalise
         env:
           LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
-        run: |
-          lokalise2 file upload \
-            --token "$LOKALISE_API_TOKEN" \
-            --project-id "$LOKALISE_PROJECT_ID" \
-            --file "locales/en.json" \
-            --lang-iso en \
-            --replace-modified
+        run: lokalise2 file upload --token "$LOKALISE_API_TOKEN" --project-id "$LOKALISE_PROJECT_ID" --file "locales/en.json" --lang-iso en --replace-modified
 
-      - name: Download from Lokalise
+        - name: Download from Lokalise
         env:
           LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
-        run: |
-          lokalise2 file download \
-            --token "$LOKALISE_API_TOKEN" \
-            --project-id "$LOKALISE_PROJECT_ID" \
-            --format json \
-            --unzip-to "./locales"
+        run: lokalise2 file download --token "$LOKALISE_API_TOKEN" --project-id "$LOKALISE_PROJECT_ID" --format json --unzip-to "./locales"
 
-      - name: Commit Translations
+        - name: Commit Translations
         run: |
           git config --global user.name "localization-bot"
           git config --global user.email "bot@email.com"
@@ -89,30 +78,7 @@ jobs:
           git commit -m "Update translations" || echo "No changes"
           git push
 
-      - name: Upload to Lokalise
-        env:
-          LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
-          LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
-        run: |
-          lokalise2 file upload \
-            --token "$LOKALISE_API_TOKEN" \
-            --project-id "$LOKALISE_PROJECT_ID" \
-            --file "locales/en.json" \
-            --lang-iso en \
-            --replace-modified
-
-      - name: Download from Lokalise
-        env:
-          LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
-          LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
-        run: |
-          lokalise2 file download \
-            --token "$LOKALISE_API_TOKEN" \
-            --project-id "$LOKALISE_PROJECT_ID" \
-            --format json \
-            --unzip-to "./locales"
-
-      - name: Commit Translations
+        - name: Commit Translations
         run: |
           git config --global user.name "localization-bot"
           git config --global user.email "bot@email.com"
