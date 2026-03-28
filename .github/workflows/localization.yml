@@ -27,8 +27,7 @@ jobs:
 
       - name: Install Lokalise CLI
         run: |
-          curl -L https://github.com/lokalise/lokalise-cli-2-go/releases/latest/download/lokalise2-linux-amd64.tar.gz -o lokalise2.tar.gz
-          tar -xzf lokalise2.tar.gz
+          curl -L https://github.com/lokalise/lokalise-cli-2-go/releases/download/v2.10.0/lokalise2-linux-amd64 -o lokalise2
           chmod +x lokalise2
           sudo mv lokalise2 /usr/local/bin/
 
