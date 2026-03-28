@@ -52,17 +52,11 @@ jobs:
       - name: Validate JSON
         run: python -m json.tool locales/en.json > /dev/null
 
-      - name: Install Lokalise CLI v2
-        uses: lokalise/install-lokalise-cli-v2@v2.1.0
-        with:
-          force-install: true         # Optional: force reinstallation even if already installed
-          target-version: 3.1.3       # Optional: specify CLI version (e.g., 3.1.1). Defaults to latest.
-          add-to-path: false          # Optional: don't add lokalise2 command to PATH (it's installed under the `./bin` directory)
-
-      - name: Download translations
-       # Or use ./bin/lokalise2 if you choose not to add lokalise2 to PATH
+      - name: Install Lokalise CLI
       run: |
-        lokalise2 file download --token API_TOKEN --project-id abcd1234.5678 --format json
+        curl -L https://github.com/lokalise/lokalise-cli-2-go/releases/download/v2.10.0/lokalise2-linux-amd64 -o lokalise2
+        chmod +x lokalise2
+        sudo mv lokalise2 /usr/local/bin/
 
       - name: Upload to Lokalise
         env:
