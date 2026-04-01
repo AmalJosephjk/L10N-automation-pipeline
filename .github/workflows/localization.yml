@@ -32,6 +32,13 @@ jobs:
 
       - name: Verify Lokalise CLI
         run: lokalise2 --version
+      - name: Debug Secrets
+        run: |
+          echo "Token length: ${#LOKALISE_API_TOKEN}"
+          echo "Project ID: $LOKALISE_PROJECT_ID"
+        env:
+          LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
+          LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
 
       - name: Upload to Lokalise
         env:
