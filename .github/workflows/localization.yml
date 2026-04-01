@@ -1,17 +1,11 @@
-env:
-  BRANCH_NAME: ${{ github.ref_name }}
 name: Localization Pipeline
-
 on:
   push:
-
 permissions:
   contents: write
-
 jobs:
   localization:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,26 +28,38 @@ jobs:
 
       - name: Verify Lokalise CLI
         run: lokalise2 --version
+
       - name: Debug Secrets
-        run: |
-          echo "Token length: ${#LOKALISE_API_TOKEN}"
-          echo "Project ID: $LOKALISE_PROJECT_ID"
         env:
           LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
+        run: |
+          echo "Token length: ${#LOKALISE_API_TOKEN}"
+          echo "Project ID: $LOKALISE_PROJECT_ID"
 
       - name: Upload to Lokalise
         env:
           LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
-          BRANCH_NAME: ${{ github.ref_name }}
-        run: lokalise2 file upload --token "$LOKALISE_API_TOKEN" --project-id "$LOKALISE_PROJECT_ID" --file "locales/en.json" --lang-iso en --replace-modified --branch "$BRANCH_NAME"
+        run: |
+          lokalise2 file upload \
+            --token "$LOKALISE_API_TOKEN" \
+            --project-id "$LOKALISE_PROJECT_ID" \
+            --file "locales/en.json" \
+            --lang-iso en \
+            --replace-modified \
+            --poll
+
       - name: Download from Lokalise
         env:
           LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
-          BRANCH_NAME: ${{ github.ref_name }}
-        run: lokalise2 file download --token "$LOKALISE_API_TOKEN" --project-id "$LOKALISE_PROJECT_ID" --format json --unzip-to "./locales" --branch "$BRANCH_NAME"
+        run: |
+          lokalise2 file download \
+            --token "$LOKALISE_API_TOKEN" \
+            --project-id "$LOKALISE_PROJECT_ID" \
+            --format json \
+            --unzip-to "./locales"
 
       - name: Commit Translations
         run: |
