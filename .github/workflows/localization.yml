@@ -1,3 +1,5 @@
+env:
+  BRANCH_NAME: ${{ github.ref_name }}
 name: Localization Pipeline
 
 on:
@@ -44,13 +46,14 @@ jobs:
         env:
           LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
-        run: lokalise2 file upload --token "$LOKALISE_API_TOKEN" --project-id "$LOKALISE_PROJECT_ID" --file "locales/en.json" --lang-iso en --replace-modified
-
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: lokalise2 file upload --token "$LOKALISE_API_TOKEN" --project-id "$LOKALISE_PROJECT_ID" --file "locales/en.json" --lang-iso en --replace-modified --branch "$BRANCH_NAME"
       - name: Download from Lokalise
         env:
           LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
-        run: lokalise2 file download --token "$LOKALISE_API_TOKEN" --project-id "$LOKALISE_PROJECT_ID" --format json --unzip-to "./locales"
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: lokalise2 file download --token "$LOKALISE_API_TOKEN" --project-id "$LOKALISE_PROJECT_ID" --format json --unzip-to "./locales" --branch "$BRANCH_NAME"
 
       - name: Commit Translations
         run: |
